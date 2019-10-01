@@ -57,6 +57,7 @@ class Database
         $i++;
       }
     }
+
     $result = $this->conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -85,6 +86,7 @@ class Database
     $field=rtrim($field, ",");
     $values=rtrim($values, ",");
     $sql = "INSERT INTO $table ($field) VALUES ($values)";
+    
     if ($this->conn->query($sql) === TRUE) {
         return true;
     } else {
