@@ -36,4 +36,23 @@ Flight::route('POST /user/signup', function(){
   return;
 });
 
+Flight::route('POST /user/verify', function(){
+  // validate rollno
+  if(!preg_match('/[bm](se|cs|it)[fs][0-3][0-9][am][05][0-9][0-9]/', Flight::request()->query['rollno'])){
+    Flight::json(array('error' => 1,'msg'=>'Invalid Roll Number'));
+    return;
+  }
+  $user=new User(strtolower(Flight::request()->query['rollno']),null);
+  if (!$user->verify(Flight::request()->query['code'])) {
+    Flight::json(array('error' => 1,'msg'=>'Error in Verification'));
+    return;
+  }
+  if (!$user->sendVerifications()) {
+    Flight::json(array('error' => 1,'msg'=>'Error Sending Verification'));
+    return;
+  }
+  Flight::json(array('success' => 1,'msg'=>'Sign Up Successful'));
+  return;
+});
+
 Flight::start();
